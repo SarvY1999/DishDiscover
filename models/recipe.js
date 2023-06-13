@@ -5,7 +5,7 @@ const recipe = new mongoose.Schema({
         type: String,
         required: true
     },
-    descriprions: {
+    descriptions: {
         type: String,
         required: true
     },
