@@ -1,12 +1,12 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../models/user');
-const userError = require('../error/userError');
+const { missingDetails, loginError } = require('../error/userError');
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-        throw new userError();
+        throw new missingDetails();
     };
 
     const user = await User.create({ ...req.body });
@@ -14,8 +14,23 @@ const register = async (req, res) => {
     res.status(StatusCodes.CREATED).json(user);
 };
 
-const login = (req, res) => {
-    res.send('login user');
+const login = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        throw new loginError();
+    }
+
+    const user = await User.findOne({ email });
+
+    const isCorrectPassword = await user.verifyPassword(password);
+
+    if (!isCorrectPassword) {
+        throw new loginError();
+    }
+
+    const token = await user.createJWT();
+    res.status(StatusCodes.CREATED).json({ user, token });
 };
 
 const logout = (req, res) => {
