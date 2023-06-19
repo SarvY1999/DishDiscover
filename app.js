@@ -5,10 +5,11 @@ const app = express();
 const connectDb = require('./db/connectDb');
 const recipeRouter = require('./routes/recipe');
 const userRouter = require('./routes/user');
+const authenticate = require('./middleware/authentication');
 
 const port = process.env.PORT || 3000
-app.use(express.json())
-app.use('/api/v1/recipe', recipeRouter);
+app.use(express.json());
+app.use('/api/v1/recipe', authenticate, recipeRouter);
 app.use('/api/v1/user', userRouter);
 
 const start = async () => {

@@ -19,4 +19,14 @@ class loginError extends Error {
 
 }
 
-module.exports = { missingDetails, loginError };
+
+class unathenticated extends Error {
+    constructor(message) {
+        super(message)
+        this.message = "Invalid Authorization";
+        this.statuscode = StatusCodes.FORBIDDEN;
+    }
+
+}
+
+module.exports = { missingDetails, loginError, unathenticated };
